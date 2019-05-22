@@ -3,12 +3,13 @@ import React from 'react';
 // Don't touch this block of code
 class Item extends React.PureComponent {
   render() {
-    const {id, info} = this.props.user;
+    const { id, info } = this.props.user;
     return (
       <div>
         <button
           data-testid={`user.${id}.delete`}
-          onClick={() => this.props.onRemoveUser(id)}>
+          onClick={() => this.props.onRemoveUser(id)}
+        >
           delete user ${id}
         </button>
         <input
@@ -25,7 +26,8 @@ class Item extends React.PureComponent {
           {info.languages.map((lan, index) => (
             <button
               key={index}
-              onClick={() => this.props.onRemoveLanguage(id, index)}>
+              onClick={() => this.props.onRemoveLanguage(id, index)}
+            >
               x {lan}
             </button>
           ))}
@@ -42,30 +44,57 @@ class DeepModifyState extends React.Component {
       {
         id: 1,
         name: 'User 1',
-        info: {address: 'Address 1', languages: ['en', 'vi']},
+        info: { address: 'Address 1', languages: ['en', 'vi'] },
       },
       {
         id: 2,
         name: 'User 2',
-        info: {address: 'Address 2', languages: ['en', 'vi', 'au']},
+        info: { address: 'Address 2', languages: ['en', 'vi', 'au'] },
       },
     ],
   };
 
   handleNameChange = (userId, value) => {
-    // please fulfill the function
+    const list = [...this.state.list];
+    const index = list.findIndex(item => item.id === userId);
+    const newData = { ...list[index], name: value };
+    list.splice(index, 1, newData);
+    this.setState({ list: [...list] });
   };
 
   removeUser = userId => {
-    // please fulfill the function
+    const list = [...this.state.list];
+    const index = list.findIndex(item => item.id === userId);
+    list.splice(index, 1);
+    this.setState({ list });
   };
 
   handleAddressChange = (userId, value) => {
-    // please fulfill the function
+    const list = [...this.state.list];
+    const index = list.findIndex(item => item.id === userId);
+    const newData = {
+      ...list[index],
+      info: { ...list[index].info, address: value },
+    };
+    list.splice(index, 1, newData);
+    this.setState({ list: [...list] });
   };
 
   removeLanguage = (userId, lanIndex) => {
     // please fulfill the function
+    const list = [...this.state.list];
+    const index = list.findIndex(item => item.id === userId);
+    const listItem = list[index];
+    const lan = [...listItem.info.languages];
+
+    lan.splice(lanIndex, 1);
+    const modifyLan = {
+      ...list[index],
+      info: { ...list[index].info, languages: lan },
+    };
+   
+    list.splice(index, 1, modifyLan);
+    this.setState({ list });
   };
 
   render() {
